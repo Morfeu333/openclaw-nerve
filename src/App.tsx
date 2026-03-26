@@ -305,11 +305,12 @@ export default function App({ onLogout }: AppProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [spawnDialogOpen, setSpawnDialogOpen] = useState(false);
 
-  // View mode state (chat | kanban), persisted to localStorage
+  // View mode state (chat | kanban | mission-control), persisted to localStorage
   const [viewMode, setViewModeRaw] = useState<ViewMode>(() => {
     try {
       const saved = localStorage.getItem('nerve:viewMode');
       if (saved === 'kanban') return 'kanban';
+      if (saved === 'mission-control') return 'mission-control';
     } catch { /* ignore */ }
     return 'chat';
   });
@@ -914,6 +915,16 @@ export default function App({ onLogout }: AppProps) {
          * in-progress voice recording / STT transcription survives tab switches.
          * See: https://github.com/.../issues/64
          */}
+        {viewMode === 'mission-control' && (
+          <div className="shell-panel boot-panel flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden rounded-[28px]">
+            <iframe
+              src="http://localhost:7777"
+              title="Mission Control"
+              className="flex-1 w-full h-full border-0"
+              allow="clipboard-read; clipboard-write"
+            />
+          </div>
+        )}
         {viewMode === 'kanban' && (
           <div className="shell-panel boot-panel flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden rounded-[28px]">
             <Suspense fallback={<div className="flex-1 flex items-center justify-center text-muted-foreground text-xs bg-background">Loading…</div>}>
@@ -922,11 +933,11 @@ export default function App({ onLogout }: AppProps) {
           </div>
         )}
         {isCompactLayout ? (
-          <div className={`shell-panel flex-1 min-w-0 min-h-0 overflow-hidden rounded-[28px] boot-panel${viewMode === 'kanban' ? ' hidden' : ''}`}>
+          <div className={`shell-panel flex-1 min-w-0 min-h-0 overflow-hidden rounded-[28px] boot-panel${viewMode === 'kanban' || viewMode === 'mission-control' ? ' hidden' : ''}`}>
             {chatContent}
           </div>
         ) : (
-          <div style={{ display: viewMode === 'kanban' ? 'none' : 'contents' }}>
+          <div style={{ display: viewMode === 'kanban' || viewMode === 'mission-control' ? 'none' : 'contents' }}>
             <ResizablePanels
               leftPercent={panelRatio}
               onResize={setPanelRatio}
