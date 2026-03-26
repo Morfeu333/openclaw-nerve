@@ -7,7 +7,7 @@
 
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { WorkspaceTabs, type TabId } from './WorkspaceTabs';
-import { CronsTab, ConfigTab, SkillsTab } from './tabs';
+import { CronsTab, ConfigTab, SkillsTab, MissionControlTab } from './tabs';
 import { useCrons } from './hooks/useCrons';
 import { KanbanQuickView } from '@/features/kanban';
 import { getWorkspaceStorageKey } from './workspaceScope';
@@ -92,7 +92,7 @@ const STORAGE_KEY = 'nerve-workspace-tab';
 function getInitialTab(): TabId {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && ['memory', 'crons', 'config', 'kanban'].includes(stored)) {
+    if (stored && ['memory', 'crons', 'config', 'kanban', 'mission-control'].includes(stored)) {
       return stored as TabId;
     }
   } catch { /* ignore */ }
@@ -182,6 +182,9 @@ export function WorkspacePanel({
               onOpenTask={(task) => onOpenTask ? onOpenTask(task.id) : onOpenBoard?.()}
             />
           )}
+        </div>
+        <div className={activeTab === 'mission-control' ? 'h-full' : 'hidden'} hidden={activeTab !== 'mission-control'} role="tabpanel" id="workspace-tabpanel-mission-control" aria-labelledby="workspace-tab-mission-control">
+          {visitedTabs.has('mission-control') && <MissionControlTab />}
         </div>
       </div>
     </div>
