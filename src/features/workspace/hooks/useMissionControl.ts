@@ -54,6 +54,13 @@ export function useMissionControl() {
       if (cronsData.ok) {
         const raw = cronsData.result?.jobs || cronsData.result?.details?.jobs || (Array.isArray(cronsData.result) ? cronsData.result : []);
         setCronJobs((raw as Record<string, unknown>[]).map(normalizeCronJob));
+      } else {
+        // Gateway crons unavailable — fall back to disk-based endpoint
+        const localRes = await fetch('/api/crons/local');
+        const localData = await localRes.json() as { ok: boolean; jobs?: unknown[] };
+        if (localData.ok && localData.jobs) {
+          setCronJobs((localData.jobs as Record<string, unknown>[]).map(normalizeCronJob));
+        }
       }
     } catch (err) {
       setError((err as Error).message);
