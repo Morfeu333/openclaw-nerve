@@ -4,9 +4,9 @@
  */
 
 import { useCallback } from 'react';
-import { Brain, Clock, Settings, Columns3, type LucideIcon } from 'lucide-react';
+import { Brain, Clock, Settings, Columns3, LayoutDashboard, type LucideIcon } from 'lucide-react';
 
-export type TabId = 'memory' | 'crons' | 'config' | 'kanban';
+export type TabId = 'memory' | 'crons' | 'config' | 'kanban' | 'mission-control';
 
 interface Tab {
   id: TabId;
@@ -19,6 +19,7 @@ const TABS: Tab[] = [
   { id: 'crons', label: 'Crons', icon: Clock },
   { id: 'kanban', label: 'Tasks', icon: Columns3 },
   { id: 'config', label: 'Config', icon: Settings },
+  { id: 'mission-control', label: 'MC', icon: LayoutDashboard },
 ];
 
 interface WorkspaceTabsProps {
